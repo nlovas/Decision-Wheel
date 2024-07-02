@@ -31,3 +31,18 @@ body {
     text-wrap: balance;
   }
 }
+
+
+/* sidebar */
+/*
+.task-input-wrapper input{
+  display: flex;
+  border: solid red 1px;
+  flex-basis: 20%;
+}
+
+.task-entry-button-wrapper button{
+  display: flex;
+  border: solid black 1px;
+  flex-basis: 50%;
+}*/

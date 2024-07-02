@@ -1,0 +1,178 @@
+This file has everything that was inside useEffect before
+
+/*
+        currently adjusting my useeffect to use a ref for the canvas
+        Check these out
+        https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
+        https://www.monknow.dev/en/blog/how-to-use-the-canvas-element-in-react/
+        neither seem to have an issue with canvas possibly being null????
+        for next time, try seeing if u can move functions outside of usefeect?? idk if itll help. maybe ask reddit or something idk
+        could also try going back to the way it was without useref??? would it work???
+        */
+
+        console.log("calling useeffect");
+        const canvas = canvasRef.current;//document.getElementById("canvas") as HTMLCanvasElement;
+        if (canvas == null) return;
+        const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+        if(context == null) return;
+        setCanvasContext(context);
+        ctx?.save();
+
+        window.addEventListener('resize', resizeCanvas, false);
+        resizeCanvas();
+
+    // very helpful: https://stackoverflow.com/a/8486324
+    // and https://stackoverflow.com/a/10215724
+    // THE MOST HELPFUL https://stackoverflow.com/a/33558386
+    function resizeCanvas(){
+        const parent = document.getElementById("canvas-wrapper") as HTMLElement;
+        canvas.style.display = "none";
+        const ow = parent.offsetWidth;
+        const oh = parent.offsetHeight;
+        canvas.height = oh;
+        canvas.width = ow;
+        canvas.style.display = "block";
+        drawWheel(ow/2,oh/2);
+        drawPeg(ow/2, oh/2);
+    }
+
+    function drawWheel(centerX: number, centerY:number){
+        console.log(centerX, centerY);
+        ctx.strokeStyle = "black";
+        //ctx.fillStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        let minLength = Math.min(canvas.width, canvas.height);
+        let radius = (minLength*.9)/2 //diameter is 90% of the canvas' shortest side
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        console.log("???");
+        if (taskList.length > 0){
+            console.log("ok");
+            taskList.forEach( task => {
+                addSegment(centerX, centerY, radius, task.id, task.task);
+            });
+        }
+    }
+
+    function drawPeg(centerX: number, centerY: number){
+        // TODO: call from drawWheel to save on calculations
+        // TODO: scale peg too
+        // want to place the peg on the circle at a certain point
+        // need to get the domain max for x position
+        let minLength = Math.min(canvas.width, canvas.height);
+        const radius = (minLength * .9) / 2;
+        //const domainMin = centerX - radius;
+        //const domainMax = centerX + radius;
+        // want to put the peg somewhere 3/4 ish of the diameter x-wise
+        /*console.log("domain Max: ", domainMax);
+        const coordX = domainMax * (3/4); // if theres a resizing bug i bet its here lol
+
+        // now can calculate the y position
+        // using equation of a circle is (x - h)^2 + (y - k)^2 = r^2
+        // y = sqrt(r^2 - (x - h)^2) + k
+        const coordY = Math.sqrt(Math.pow(radius,2) - Math.pow(coordX - centerX, 2)) + centerY;*/
+
+        //want y to be near the top
+        /*const rangeMin = centerY - radius;
+        const coordY = rangeMin * (3/4);
+        console.log("center x: ", centerX, "center y: ", centerY, "radius: ", radius, "coordY: ", coordY);
+
+        //console.log(Math.pow(radius,2) - Math.pow(coordY - centerY, 2));
+
+        // now calculate x position
+        // x = sqrt(r^2 - (y - k)^2) + h
+        const coordX = Math.sqrt(Math.pow(radius,2) + Math.pow(coordY - centerY, 2)) + centerX
+        console.log("pegSpot: ", coordX, coordY);
+*/
+
+        // Formula for getting the point on the circle that finally worked for me https://stackoverflow.com/a/32684717
+        const degreeAngle = 45;
+        const radAngle = degreeAngle * Math.PI / 180;
+        const coordX = centerX + radius * Math.cos(-radAngle);
+        const coordY = centerY + radius * Math.sin(-radAngle);
+
+
+        //const smallAngle = 30;
+        //const bigAngles = 75;
+
+        const shortSide = 20;
+        const longSides = 30;
+        // calculate bottom point of triangle by finding missing triangle side with a^2 + b^2 = c^2
+        // root(c^2 - a^2) = b
+        let sideDifTmp = Math.pow(longSides,2) - Math.pow(shortSide/2, 2);
+        const middleHeight = Math.sqrt(sideDifTmp);
+
+        // rotate the peg to an angle
+        ctx.translate(coordX, coordY + (middleHeight * 7/8));
+        ctx.rotate(45 * Math.PI / 180);
+        ctx.translate(-coordX, -coordY - (middleHeight * 7/8));
+
+        ctx.strokeStyle="black";
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+
+        ctx.beginPath();
+        // draw round side
+        ctx.arc(coordX, coordY, shortSide/2, Math.PI, 0);
+        // draw pointy side
+        ctx.lineTo(coordX, coordY + middleHeight);
+        ctx.lineTo(coordX - shortSide/2, coordY);
+        ctx.closePath();
+
+        ctx.strokeStyle = "#322216";
+        ctx.stroke();
+        ctx.fillStyle="#865C3A";
+        ctx.fill();
+        //ctx.lineWidth=2;
+        ctx.setTransform(1,0,0,1,0,0);
+    }
+
+    function addSegment(centerX: number, centerY: number, radius: number, taskId: string, taskText: string){
+        // TODO: need to rethink this a bit so its more react-like
+        // TODO: scaling with wheel
+        // frowned upon to use useref but heres how if u do https://dev.to/nitsancohen770/using-refs-and-hooks-to-call-child-function-in-parent-component-4mm3#:~:text=In%20React%2C%20it's%20generally%20best,cases%2C%20you%20can%20use%20refs.
+        // https://www.dhiwise.com/post/exploring-useref-a-must-know-hook-for-every-react-developer
+
+        /*
+        functional components seem to need to use useEffect??? read these and see
+        https://stackoverflow.com/questions/32414308/updating-state-on-props-change-in-react-form - is it an antipattern or not??? - doesnt seem to be
+        https://www.pluralsight.com/resources/blog/guides/prop-changes-in-react-component -- trying this tutorial ***************
+        https://dev.to/savagepixie/how-to-mimic-componentdidupdate-with-react-hooks-3j8c
+
+        */
+
+
+
+        // couple of special cases
+        if (segments.length === 0) {
+            // just put the task in
+            const firstSeg: Segment = {
+                taskId: taskId,
+                text: taskText,
+                from: 0,
+                to: 2 * Math.PI * radius, // the entire circle's circumference
+                colour: "red"
+            };
+            setSegments([firstSeg]);
+            // draw the text and fill the colour
+            //TODO: need to set max width and font scale
+            console.log("drawing font");
+            ctx.font = "30px sans-serif";
+            //ctx.textBaseline = "alphabetic";
+            ctx.fillStyle = "black";
+            ctx.fillText("test!", centerX, centerY);
+            return;
+        }
+        /*if(segments.length === 1){
+            // the first division
+            ctx.beginPath();
+            ctx.moveTo(centerX - radius, centerY);
+            ctx.lineTo(centerX + radius, centerY);
+            ctx.stroke();
+            return;
+        }*/
+        // otherwise, just split the segment with the largest circumference value
+    }
