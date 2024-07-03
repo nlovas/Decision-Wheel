@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Task, Segment } from "../types";
+import Konva from "konva";
 
 export function Wheel({
     taskList
@@ -20,7 +21,7 @@ export function Wheel({
         const canvas = canvasRef.current as HTMLCanvasElement;//document.getElementById("canvas") as HTMLCanvasElement;
         const context = canvas.getContext("2d") as CanvasRenderingContext2D;
         setCanvasContext(context);
-        ctx?.save();
+        //ctx?.save();
 
         window.addEventListener('resize', resizeCanvas, false);
         resizeCanvas();
@@ -40,7 +41,7 @@ export function Wheel({
         //drawPeg(ow/2, oh/2);
     }
 
-    }, []);
+    }, [taskList]);
 
     return (
         <div id="canvas-wrapper" className="basis-10/12 w-full relative border border-red-600">
