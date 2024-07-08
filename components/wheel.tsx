@@ -23,7 +23,7 @@ function Wheel({ taskList }: Props) {
     const layerRef = React.useRef<Konva.Layer>(null);
     const wheelGroupRef = React.useRef<Konva.Group>(null);
     const canvasWrapperRef = useRef<HTMLDivElement>(null);
-    let peg: Konva.Wedge;
+    //let peg = React.useRef<Konva.Wedge>(null);
 
     useEffect(() => {
 
@@ -59,8 +59,6 @@ function Wheel({ taskList }: Props) {
         anim.start();*/
     }
 
-    }, [taskList]);
-
     function drawWheel(centerX: number, centerY:number){
         if (stageRef.current == null || wheelGroupRef.current == null || layerRef.current == null) return;
         wheelGroupRef.current.destroyChildren();
@@ -82,10 +80,10 @@ function Wheel({ taskList }: Props) {
     }
 
     function drawPeg(centerX: number, centerY: number){
-        // TODO: scale peg too
         if(stageRef.current == null || layerRef.current == null) return;
         // first remove old wedge if there is one
-        peg?.destroy();
+        //peg.current?.destroy();
+        layerRef.current.findOne("#peg")?.destroy();
 
         let minLength = Math.min(stageRef.current.width(), stageRef.current.height());
         const radius = (minLength * .9) / 2;
@@ -105,7 +103,7 @@ function Wheel({ taskList }: Props) {
         // ill make the peg roughly 1/4 the width of the canvas
         let pegHeight = Math.min(Math.ceil(stageRef.current.width() / 4), maxPegHeight);
 
-        peg = new Konva.Wedge({
+        let peg = new Konva.Wedge({
             x: coordX,
             y: coordY,
             radius: radius,
@@ -126,6 +124,8 @@ function Wheel({ taskList }: Props) {
     function getRandomColor(){
         return colors[Math.floor(Math.random() * colors.length)];
     }
+
+    }, [taskList, colors]);
 
 	return (
         <div ref={canvasWrapperRef} id="canvas-wrapper" className="basis-10/12 w-full relative border border-red-600">
