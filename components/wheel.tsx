@@ -15,9 +15,6 @@ function Wheel({ taskList }: Props) {
     // keeps track of the amount of circumference that each task is using
     const [segments, setSegments] = useState(Array<Segment>());
 
-    // TODO: replace these with better colors
-    const colors = ["yellow", "blue", "cyan", "red", "pink", "green", "white", "orange", "brown", "purple"];
-
     // useRef is for a mutable variable that doesnt trigger a change in the component
     const stageRef = React.useRef<Konva.Stage>(null);
     const layerRef = React.useRef<Konva.Layer>(null);
@@ -26,6 +23,8 @@ function Wheel({ taskList }: Props) {
     //let peg = React.useRef<Konva.Wedge>(null);
 
     useEffect(() => {
+    // TODO: replace these with better colors
+    const colors = ["yellow", "blue", "cyan", "red", "pink", "green", "white", "orange", "brown", "purple"];
 
         console.log("useffect called");
         window.addEventListener('resize', resizeCanvas, false);
@@ -125,7 +124,7 @@ function Wheel({ taskList }: Props) {
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    }, [taskList, colors]);
+    }, [taskList]);
 
 	return (
         <div ref={canvasWrapperRef} id="canvas-wrapper" className="basis-10/12 w-full relative border border-red-600">
