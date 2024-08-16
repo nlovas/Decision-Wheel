@@ -36,7 +36,7 @@ export function Sidebar({
             editingTask={() => setEditingIndex(index)}
             finishedEditing={(newText, id) => finishedEditing(newText, id)}
             deleteItem={() => deleteTask(index)}>
-              </TaskItem>
+            </TaskItem>
         </li>
         );
     });
@@ -44,8 +44,11 @@ export function Sidebar({
     return (
         <>
         <div className="flex flex-col p-18 ml-6 h-full basis-2/5 p-2 rounded-md bg-emerald-50 border border-green-800">
+        <label htmlFor="task-textbox">New Task</label>
             <div className="flex flex-row">
-                <div className="task-input-wrapper"><input className="rounded-md" type="text" value={taskInputVal} onChange={(e) => {setTaskInputVal(e.target.value)}} placeholder="Enter Task" id="task-input"></input></div>
+                <div className="task-input-wrapper">
+                    <input className="rounded-md" id="task-textbox" type="text" value={taskInputVal} onChange={(e) => {setTaskInputVal(e.target.value)}}></input>
+                    </div>
                 <div className="task-entry-button-wrapper"><button className="bg-emerald-300" onClick={() => {createTask()} }>Ok</button></div>
             </div>
             <ul>{listItems}</ul>
