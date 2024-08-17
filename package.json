@@ -11,6 +11,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@testing-library/user-event": "^14.5.2",
     "konva": "^9.3.12",
     "next": "14.1.4",
     "react": "^18",
