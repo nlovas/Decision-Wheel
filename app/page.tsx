@@ -29,27 +29,6 @@ export default function Home() {
     setTaskList([...taskList, newTask]);
   }
 
-  function editTask(newText: string, taskId: string){
-    //let idx = taskList.findIndex((task) => {task.id === taskId});
-    /*const editedTask: Task = {
-      id: taskId,
-      task: newText
-    }*/
-    let updatedList = taskList.map((item, index) => {
-      if(item.id === taskId) {
-        return {task: newText, id: item.id};
-      } else return item;
-    });
-    setTaskList([...updatedList]);
-  }
-
-  function deleteTask(index: number){
-    let newArray = taskList.filter((task, idx) => {
-      return idx !== index;
-    })
-    setTaskList([...newArray]);
-  }
-
   return (
   <main className="flex h-screen flex-col p-20">
   <h1 className="w-full text-center">Decision Wheel</h1>
@@ -60,7 +39,7 @@ export default function Home() {
         <button className="absolute bottom-0 right-0">Choose</button>
       </div>
     </div>
-    <Sidebar addTask={addTask} editTask={editTask} deleteTask={deleteTask} taskList={taskList}/>
+    <Sidebar addTask={addTask} taskList={taskList}/>
   </div>
   </main>
   );

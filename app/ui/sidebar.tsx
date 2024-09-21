@@ -4,13 +4,9 @@ import { TaskItem } from "./task-item";
 
 export function Sidebar({
     addTask,
-    editTask,
-    deleteTask,
     taskList
     }:{
         addTask: (str:string) => void,
-        editTask: (newText:string, taskId:string) => void,
-        deleteTask: (index: number) => void,
         taskList: Array<Task>
     }) {
 
@@ -22,21 +18,10 @@ export function Sidebar({
         setTaskInputVal('');
     }
 
-    function finishedEditing(newText: string, id: string){
-        editTask(newText, id);
-        setEditingIndex(-1);
-    }
-
     const listItems = taskList.map((item: Task, index: number) => {
         return (
         <li className="flex flex-row w-full" key={item.id}>
-            <TaskItem
-            task={item}
-            isEditing={editingIndex === index}
-            editingTask={() => setEditingIndex(index)}
-            finishedEditing={(newText, id) => finishedEditing(newText, id)}
-            deleteItem={() => deleteTask(index)}>
-            </TaskItem>
+            {item.task}
         </li>
         );
     });

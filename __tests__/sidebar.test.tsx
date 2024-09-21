@@ -6,11 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 test("renders a blank sidebar", () =>{
     const mockAddTask = jest.fn();
-    const mockEditTask = jest.fn();
-    const mockDeleteTask = jest.fn();
     const mockTaskList = new Array<Task>();
 
-    render(<Sidebar addTask={mockAddTask} editTask={mockEditTask} deleteTask={mockDeleteTask} taskList={mockTaskList}/>)
+    render(<Sidebar addTask={mockAddTask} taskList={mockTaskList}/>)
     const input = screen.getByLabelText("New Task");
     expect(input).toBeInstanceOf(HTMLInputElement);
 });
@@ -18,35 +16,17 @@ test("renders a blank sidebar", () =>{
 test("displays a new task", async () =>{
 /*
 
-USE THIS ITS HELPFUL https://medium.com/@rickhanlonii/understanding-jest-mocks-f0046c68e53c
-and this?? https://robertmarshall.dev/blog/react-component-props-passed-to-child-jest-unit-test/
+want to test that it can create a new task that is displayed in the sidebar.
+ensure that the input is cleared when done
+
 */
-const spyAddTask = jest.spyOn(Sidebar.prototype, "createTask");
-
-render(<Sidebar addTask={spyAddTask} editTask={mockEditTask} deleteTask={mockDeleteTask} taskList={mockTaskList}/>)
 
 
-/*    const mockEditTask = jest.fn();
-    const mockDeleteTask = jest.fn();
-    let mockTaskList = new Array<Task>();*/
+//This is how I thought to approach this test, but Typescript gives an error as the types are different
+/*let spyAddTask = jest.spyOn(Sidebar.prototype, "createTask");
+let mockTaskList = new Array<Task>();
 
-/*
-    const mockAddTask = jest.fn((input) => {
-        mockTaskList.push({id: uuidv4(), task: input});
-        
-        // TODO: test that the input resets
-    });
+render(<Sidebar addTask={spyAddTask} taskList={mockTaskList}/>)
+*/
 
-    render(<Sidebar addTask={mockAddTask} editTask={mockEditTask} deleteTask={mockDeleteTask} taskList={mockTaskList}/>)
-    const input = screen.getByLabelText("New Task");
-
-    await user.click(input);
-    await user.keyboard('laundry');
-
-    const submitBtn = screen.getByText('Ok');
-    await user.click(submitBtn);
-    expect(mockAddTask).toHaveBeenCalled();
-    expect(mockTaskList).toHaveLength(1);
-    expect(mockTaskList[0]).toHaveProperty("id");
-    expect(mockTaskList[0].task).toEqual("laundry");*/
 });
