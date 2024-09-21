@@ -8,7 +8,7 @@ import { Sidebar } from "./ui/sidebar";
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Task } from "./types";
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 
 
 // react konva get errors if its rendered server side, so must use dynamic importing
